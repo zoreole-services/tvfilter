@@ -1,0 +1,19 @@
+---
+services:
+  tvfilter:
+    build: ./build
+    image: tvfilter:latest
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Paris
+      AWS_ACCESS_KEY_ID: XJ3L7CWOTHK4W5FMPHMA
+      AWS_SECRET_ACCESS_KEY: RfAHqsiqhmYLaA5QHV+AHF5hYsYF5qKTRgq4fYAo
+      S3_BUCKET_NAME: my-aws-bucket-eu-west-1
+      S3_OBJECT_KEY_PATH: path/to/s3/object/key
+      S3_OBJECT_FILE_NAME: s3_file.txt
+      MY_SUPERNETS: "198.51.100.0/24 203.0.112.0/22 2001:db8::/32"
+    volumes:
+      - ./exabgp.conf:/etc/exabgp/exabgp.conf:ro
+    network_mode: host
+    ports:
+      - 179:179/tcp

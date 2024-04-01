@@ -1,0 +1,28 @@
+process tvfilter {
+    run python3 /etc/exabgp/tvfilter.py;
+    encoder text;
+}
+
+template {
+    neighbor tvfilter {
+        router-id 10.0.0.11;
+        local-as 65000;
+        peer-as 65001;
+        family {
+            ipv4 unicast;
+            ipv6 unicast;
+        }
+        capability {
+            graceful-restart 10;
+        }
+        api {
+            processes [ tvfilter ];
+        }
+    }
+}
+
+neighbor 10.0.0.10 {
+    inherit tvfilter;
+    local-address 10.0.0.11;
+    description "My Router";
+}
