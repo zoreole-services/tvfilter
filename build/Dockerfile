@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 
-ARG PYTHON_VERSION="3.11"
+ARG PYTHON_VERSION="3.12"
 ARG DEBIAN_VERSION="bookworm"
 
 FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 
 LABEL maintainer="Alexandre GIRARD <alexandre@zoreole.com>"
-LABEL version="1.0.0"
+LABEL version="1.0.1"
 
 ARG BOTO3_VERSION="1.35.37"
 ARG EXABGP_VERSION="4.2.22"
