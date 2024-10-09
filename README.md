@@ -4,12 +4,6 @@
 
 **TV Filter** operates within a [Docker](https://www.docker.com) container, making it easy to deploy and manage.
 
-## Information
-
-> **⚠️ Warning ⚠️**
-> 
-> **TV Filter** has been tested with **Python 3.11**. However, it is not compatible with **Python 3.12** and above for now due to an issue in **ExaBGP** ([#1177](https://github.com/Exa-Networks/exabgp/issues/1177)). This issue has been solved and merged into version **4.2.22** of **ExaBGP**, which has not yet been released.
-
 ## Prerequisites
 
 Before you begin, ensure you have the following:
