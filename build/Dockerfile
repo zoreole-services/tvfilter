@@ -9,7 +9,7 @@ LABEL maintainer="Alexandre GIRARD <alexandre@zoreole.com>"
 LABEL version="1.0.0"
 
 ARG BOTO3_VERSION="1.34.74"
-ARG EXABGP_VERSION="4.2.21"
+ARG EXABGP_VERSION="4.2.22"
 
 RUN apt-get update \
     && apt-get install --yes \
