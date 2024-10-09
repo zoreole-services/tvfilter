@@ -38,7 +38,7 @@ Before you begin, ensure you have the following:
 
 2. **Build Docker Image**:
 
-    The build process for the Docker image can be specified in the `docker-compose.yml` file.
+    The build process for the Docker image can be specified in the `docker-compose.yaml` file.
 
     ```yaml
     services:
@@ -65,7 +65,7 @@ Before you begin, ensure you have the following:
 
 1. **Docker Compose Configuration**:
 
-    We recommend using [Docker Compose](https://docs.docker.com/compose/) for managing the TV Filter service. An example configuration is available in `docker-compose.yml.example`. You can copy this file to `docker-compose.yml` and modify it to adjust settings such as ports, volumes, or environment variables.
+    We recommend using [Docker Compose](https://docs.docker.com/compose/) for managing the TV Filter service. An example configuration is available in `docker-compose.yaml.example`. You can copy this file to `docker-compose.yaml` and modify it to adjust settings such as ports, volumes, or environment variables.
 
     To configure TV Filter, you'll need to add the following environment variables:
 
@@ -82,7 +82,7 @@ Before you begin, ensure you have the following:
     | `BLACKHOLE_COMMUNITY`  | `65535:666`      | No       | BGP community value for blackhole routes.        |
     | `POLLING_INTERVAL`     | `30`             | No       | Interval (in seconds) for polling changes from S3 bucket. |
 
-    You can add these environment variables to the `environment` section of the `tvfilter` service in the `docker-compose.yml` file.
+    You can add these environment variables to the `environment` section of the `tvfilter` service in the `docker-compose.yaml` file.
 
     > ℹ If you are unsure about how to determine your public network's supernets, you can use tools like [bgpq3](https://github.com/snar/bgpq3) with the following command:
 
@@ -115,7 +115,7 @@ Before you begin, ensure you have the following:
 
     Also, make sure to modify the family settings based on what your peer supports. For instance, you can specify `ipv4 unicast` and `ipv6 unicast` if your peer supports both IPv4 and IPv6 unicast.
 
-    Make sure to bind the `exabgp.conf` file to the container at `/etc/exabgp/exabgp.conf`. You can specify this in your `docker-compose.yml` file under the `volumes` section for the `tvfilter` service like this:
+    Make sure to bind the `exabgp.conf` file to the container at `/etc/exabgp/exabgp.conf`. You can specify this in your `docker-compose.yaml` file under the `volumes` section for the `tvfilter` service like this:
 
     ```yaml
     services:
