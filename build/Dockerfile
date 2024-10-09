@@ -8,7 +8,7 @@ FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 LABEL maintainer="Alexandre GIRARD <alexandre@zoreole.com>"
 LABEL version="1.0.0"
 
-ARG BOTO3_VERSION="1.34.74"
+ARG BOTO3_VERSION="1.35.37"
 ARG EXABGP_VERSION="4.2.22"
 
 RUN apt-get update \
