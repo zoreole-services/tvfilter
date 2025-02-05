@@ -3,7 +3,6 @@ services:
   tvfilter:
     build: ./build
     image: tvfilter:latest
-    container_name: python_container
     restart: unless-stopped  
     environment:
       TZ: Europe/Paris
