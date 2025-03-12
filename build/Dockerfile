@@ -33,8 +33,10 @@ COPY tvfilter.py /etc/exabgp/tvfilter.py
 
 RUN mkfifo /run/exabgp.in \
     && mkfifo /run/exabgp.out \
+    && chown exabgp /etc/exabgp/tvfilter.py \
     && chown exabgp /run/exabgp.in \
     && chown exabgp /run/exabgp.out \
+    && chmod 755 /etc/exabgp/tvfilter.py \
     && chmod 600 /run/exabgp.in \
     && chmod 600 /run/exabgp.out
 
