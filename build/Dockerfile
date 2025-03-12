@@ -6,7 +6,7 @@ ARG DEBIAN_VERSION="bookworm"
 FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 
 LABEL maintainer="Alexandre GIRARD <alexandre@zoreole.com>, Benjamin PAYET <benjamin@zoreole.com>, Tristan SCANDELLA <tristan@zoreole.com>"
-LABEL version="1.0.1"
+LABEL version="1.0.2"
 
 ARG BOTO3_VERSION="1.37.11"
 ARG EXABGP_VERSION="4.2.24"
