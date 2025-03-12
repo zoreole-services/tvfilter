@@ -10,7 +10,7 @@ Before you begin, ensure you have the following:
 
 - A server environment. While installation is possible on physical servers, we recommend using a virtual machine for better manageability and flexibility.
 
-- A modern Linux distribution. We recommend [Debian 12](https://www.debian.org/releases/bullseye/) or [Rocky Linux 9](https://rockylinux.org).
+- A modern Linux distribution. We recommend [Debian 12](https://www.debian.org/releases/bookworm/) or [Rocky Linux 9](https://rockylinux.org).
 
 - **Docker**: Follow the official Docker installation guide for your Linux distribution.
    
