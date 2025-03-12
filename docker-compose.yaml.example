@@ -3,7 +3,7 @@ services:
   tvfilter:
     build: ./build
     image: tvfilter:latest
-    restart: unless-stopped  
+    restart: unless-stopped
     environment:
       TZ: Europe/Paris
       AWS_ACCESS_KEY_ID: XJ3L7CWOTHK4W5FMPHMA
@@ -15,5 +15,5 @@ services:
     volumes:
       - ./exabgp.conf:/etc/exabgp/exabgp.conf:ro
     network_mode: host
-    ports:
-      - 179:179/tcp
+    #ports:
+      #- 179:179/tcp
