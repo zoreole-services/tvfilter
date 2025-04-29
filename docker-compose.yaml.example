@@ -1,6 +1,7 @@
 ---
 services:
   tvfilter:
+    container_name: tvfilter
     build: ./build
     image: tvfilter:latest
     restart: unless-stopped
