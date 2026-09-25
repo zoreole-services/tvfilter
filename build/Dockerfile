@@ -46,7 +46,7 @@ ENV exabgp.daemon.user="exabgp"
 ENV exabgp.daemon.bind="0.0.0.0"
 
 ENV AWS_REGION="eu-west-1"
-ENV MAX_PREFIXES="2000"
+ENV MAX_PREFIXES="3000"
 ENV BLACKHOLE_COMMUNITY="65535:666"
 ENV POLLING_INTERVAL="30"
 
