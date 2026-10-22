@@ -18,10 +18,10 @@ S3_OBJECT_FILE_NAME = os.getenv("S3_OBJECT_FILE_NAME")
 S3_OBJECT_KEY = f"{S3_OBJECT_KEY_PATH}/{S3_OBJECT_FILE_NAME}"
 
 # Local ISP IPv4 & IPv6 networks
-MY_SUPERNETS = os.getenv("MY_SUPERNETS").split()
+MY_SUPERNETS = os.getenv("MY_SUPERNETS", "").split()
 
 # Maximum IP prefixes for IP blocking list
-# (Default = 2000)
+# (Default = 3000)
 MAX_PREFIXES = int(os.getenv("MAX_PREFIXES"))
 
 # Blackhole BGP community
@@ -43,7 +43,19 @@ s3_session = boto3.Session(
 s3_resource = s3_session.resource('s3')
 s3_object = s3_resource.Object(S3_BUCKET_NAME, S3_OBJECT_KEY)
 
-# Function to check if IP is part of local ISP networks
+
+def send(message):
+    sys.stdout.write(f"{message}\n")
+    sys.stdout.flush()
+    resp = sys.stdin.readline()
+    if not resp:
+        sys.exit(0)
+    resp = resp.strip()
+    if resp == "shutdown":
+        sys.exit(0)
+    if resp != "done":
+        print(f"[EXABGP] '{message}' -> {resp}", file=sys.stderr, flush=True)
+
 def is_ip_in_networks(address, networks):
     ip = ipaddress.ip_network(address)
     for network in networks:
@@ -52,14 +64,12 @@ def is_ip_in_networks(address, networks):
             return True
     return False
 
-# Function to sort IPv4 and IPv6 addresses
 def sort_ip(addresses):
     ipv4_list, ipv6_list = ipv4_ipv6_split(addresses)
     ipv4_sorted_list = sorted(ipv4_list, key=lambda ip: ipaddress.ip_network(ip))
     ipv6_sorted_list = sorted(ipv6_list, key=lambda ip: ipaddress.ip_network(ip))
     return ipv4_sorted_list + ipv6_sorted_list
 
-# Function to separate IPv4 and IPv6 addresses or networks in different lists
 def ipv4_ipv6_split(addresses):
     ipv4_list = []
     ipv6_list = []
@@ -74,7 +84,6 @@ def ipv4_ipv6_split(addresses):
             continue
     return ipv4_list, ipv6_list
 
-# Function to remove prohibited IP addresses
 def route_filter(routes):
     filtered_routes = set()
     for route in routes:
@@ -83,7 +92,7 @@ def route_filter(routes):
             # Check if the number of accepted routes is within the specified maximum prefixes number
             if len(filtered_routes) <= MAX_PREFIXES:
                 # Check to filter out prohibited IP addresses
-                if (route is not ip.is_multicast and
+                if ( not ip.is_multicast and
                         not ip.is_unspecified and
                         not ip.is_reserved and
                         not ip.is_link_local and
@@ -99,7 +108,7 @@ def route_filter(routes):
 
 # Function to create the full command for ExaBGP
 def announce(command, route):
-    ip = ipaddress.ip_address(route)
+    ip = ipaddress.ip_address(route.split('/')[0])
     if ip.version == 4:
         return f"{command} route {route} next-hop self community {BLACKHOLE_COMMUNITY}"
     elif ip.version == 6:
@@ -107,26 +116,36 @@ def announce(command, route):
 
 # Function to get IP list from S3 bucket
 def get_list():
-    return set(s3_object.get()['Body'].read().decode('UTF-8').split('\n'))
+    try:
+        body = s3_object.get()['Body'].read().decode('utf-8')
+        return set(
+            line.strip()
+            for line in body.splitlines()
+            if line.strip()
+        )
+    except Exception as e:
+        print(f"[S3 ERROR] {e}", file=sys.stderr, flush=True)
+        return None
 
 if __name__ == '__main__':
     current_list = []
     while True:
-        new_list = route_filter(get_list())
-        for route in new_list:
-            # Announce route to ExaBGP if not in current list but in new list
+        s3_list = get_list()
+
+        # Check whether the s3_list was well retrieved.
+        if s3_list is None:
+            time.sleep(POLLING_INTERVAL)
+            continue
+        s3_list_filtered = route_filter(s3_list)
+
+        for route in s3_list_filtered:
             if route not in current_list:
-                message = announce('announce', route)
-                sys.stdout.write(f"{message}\n")
-                sys.stdout.flush()
+                send(announce('announce', route))
                 current_list.append(route)
                 current_list = sort_ip(current_list)
         for route in current_list[:]:
-            # Withdraw route from ExaBGP if not in new list but in current list
-            if route not in new_list:
-                message = announce('withdraw', route)
-                sys.stdout.write(f"{message}\n")
-                sys.stdout.flush()
+            if route not in s3_list_filtered:
+                send(announce('withdraw', route))
                 current_list.remove(route)
                 current_list = sort_ip(current_list)
         time.sleep(POLLING_INTERVAL)
